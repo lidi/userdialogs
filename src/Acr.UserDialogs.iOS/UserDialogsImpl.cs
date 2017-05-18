@@ -131,18 +131,22 @@ namespace Acr.UserDialogs
                 if (config.IsCancellable)
                 {
                     dlg.AddAction(UIAlertAction.Create(config.CancelText, UIAlertActionStyle.Cancel, x =>
-                        config.OnAction?.Invoke(new PromptResult(false, txt.Text.Trim())
+                        config.OnAction?.Invoke(new PromptResult(false, txt.Text)
                     )));
                 }
 
                 var btnOk = UIAlertAction.Create(config.OkText, UIAlertActionStyle.Default, x =>
-                    config.OnAction?.Invoke(new PromptResult(true, txt.Text.Trim())
+                    config.OnAction?.Invoke(new PromptResult(true, txt.Text)
                 ));
                 dlg.AddAction(btnOk);
 
                 dlg.AddTextField(x =>
                 {
                     txt = x;
+                    this.SetInputType(txt, config.InputType);
+                    txt.Placeholder = config.Placeholder ?? String.Empty;
+                    txt.Text = config.Text ?? String.Empty;
+
                     if (config.MaxLength != null)
                     {
                         txt.ShouldChangeCharacters = (field, replacePosition, replacement) =>
@@ -156,14 +160,9 @@ namespace Acr.UserDialogs
 
                     if (config.OnTextChanged != null)
                     {
-                        //txt.ValueChanged += (sender, e) => ValidatePrompt(txt, btnOk, config);
                         txt.AddTarget((sender, e) => ValidatePrompt(txt, btnOk, config), UIControlEvent.EditingChanged);
                         ValidatePrompt(txt, btnOk, config);
                     }
-                    this.SetInputType(txt, config.InputType);
-                    txt.Placeholder = config.Placeholder ?? String.Empty;
-                    if (config.Text != null)
-                        txt.Text = config.Text;
                 });
                 return dlg;
             });
@@ -176,7 +175,7 @@ namespace Acr.UserDialogs
             config.OnTextChanged(args);
             btn.Enabled = args.IsValid;
             if (!txt.Text.Equals(args.Value))
-                txt.Text = args.Value;            
+                txt.Text = args.Value;
         }
 
 
@@ -218,6 +217,9 @@ namespace Acr.UserDialogs
                     Duration = cfg.Duration,
                     AnimationType = TTG.TTGSnackbarAnimationType.FadeInFadeOut
                 };
+                if (cfg.Icon != null)
+                    snackbar.Icon = cfg.Icon.ToNative();
+
                 if (cfg.BackgroundColor != null)
                     snackbar.BackgroundColor = cfg.BackgroundColor.Value.ToNative();
 

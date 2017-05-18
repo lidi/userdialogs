@@ -1,5 +1,35 @@
 ﻿# CHANGELOG
 
+## 6.4.1
+* [fix][ios] NRE with toast image
+
+## 6.4.0
+* [feature] Toasts now support icons with a special thanks to @MarcBruins
+
+## 6.3.11
+* [fix][android] fix initial validation with prompt (default value and validation)
+* [fix][android] login password box does not allow numbers
+* [fix][android] allow proper decimal separator
+* [fix][android] message text color on toasts was not being set properly with the latest version of the android support library
+* [fix][android] backspace and numbers not working in password edittext on login (included prompt as well)
+* [fix][uwp] progress dialog creation needs to be done on main thread
+* [fix][ios] toast will now span multiple lines
+
+## 6.3.10
+* [fix][android] Prompt completing when keyboard input is restarted during validation phase
+
+## 6.3.9
+* [fix] PromptConfig was missing SetAction fluent method
+* [fix][android] crash would occur when state configuration could not be restored in appcompat
+* [fix][android] Soft keyboard "Done" is now disabled when the "OK" button is disabled in prompt
+* [fix][android] When text is predefined in promptconfig, selection is set to the end
+
+## 6.3.8
+* [fix][all] Prompt.OnTextChanged should contain incoming value set from config for first pass validation
+
+## 6.3.7
+* [fix][android] Prompt maxlength in appcompat not working
+
 ## 6.3.6
 * [fix][android] Prompt fix for appcompat textchanged event
 
