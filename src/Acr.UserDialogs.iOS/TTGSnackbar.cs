@@ -2,6 +2,8 @@
 using Foundation;
 using UIKit;
 
+
+
 namespace TTG
 {
     public enum TTGSnackbarAnimationType
@@ -29,6 +31,8 @@ namespace TTG
         public Action<TTGSnackbar> ActionBlock { get; set; }
         public Action<TTGSnackbar> SecondActionBlock { get; set; }
 
+
+        public nfloat TopMargin { get; set; } = 8;
         /// <summary>
         /// Snackbar display duration. Default is 3 seconds.
         /// </summary>
@@ -36,6 +40,8 @@ namespace TTG
         public TTGSnackbarAnimationType AnimationType = TTGSnackbarAnimationType.SlideFromBottomBackToBottom;
 
         public float AnimationDuration { get; set; } = 0.3f;
+
+        public bool ShowOnTop { get; set; } = false;
 
         public nfloat CornerRadius
         {
@@ -131,10 +137,13 @@ namespace TTG
         private NSLayoutConstraint heightConstraint;
         private NSLayoutConstraint leftMarginConstraint;
         private NSLayoutConstraint rightMarginConstraint;
+        private NSLayoutConstraint topMarginConstraint;
         private NSLayoutConstraint bottomMarginConstraint;
         private NSLayoutConstraint actionButtonWidthConstraint;
         private NSLayoutConstraint secondActionButtonWidthConstraint;
         private NSLayoutConstraint iconImageViewWidthConstraint;
+
+
 
         public TTGSnackbar() : base(CoreGraphics.CGRect.FromLTRB(0, 0, 320, 44))
         {
@@ -304,6 +313,7 @@ namespace TTG
             actionButtonWidthConstraint.Constant = ActionButton.Hidden ? 0 : (SecondActionButton.Hidden ? TTGSnackbar.snackbarActionButtonMaxWidth : TTGSnackbar.snackbarActionButtonMinWidth);
             secondActionButtonWidthConstraint.Constant = SecondActionButton.Hidden ? 0 : (ActionButton.Hidden ? TTGSnackbar.snackbarActionButtonMaxWidth : TTGSnackbar.snackbarActionButtonMinWidth);
 
+
             this.LayoutIfNeeded();
 
             var localSuperView = UIApplication.SharedApplication.KeyWindow;
@@ -338,6 +348,15 @@ namespace TTG
                     1,
                     -RightMargin);
 
+                topMarginConstraint = NSLayoutConstraint.Create(
+                    this,
+                    NSLayoutAttribute.Top,
+                    NSLayoutRelation.Equal,
+                    localSuperView,
+                    NSLayoutAttribute.Top,
+                    1,
+                    TopMargin);
+
                 bottomMarginConstraint = NSLayoutConstraint.Create(
                     this,
                     NSLayoutAttribute.Bottom,
@@ -355,7 +374,12 @@ namespace TTG
                 this.AddConstraint(heightConstraint);
                 localSuperView.AddConstraint(leftMarginConstraint);
                 localSuperView.AddConstraint(rightMarginConstraint);
-                localSuperView.AddConstraint(bottomMarginConstraint);
+
+                var positionConstraint = this.ShowOnTop
+                    ? this.topMarginConstraint
+                    : this.bottomMarginConstraint;
+
+                localSuperView.AddConstraint(positionConstraint);
 
                 // Show
                 showWithAnimation();
@@ -430,8 +454,8 @@ namespace TTG
 
 
         /**
-         * Show.
-*/
+-         * Show.
+-*/
         private void showWithAnimation()
         {
             Action animationBlock = () => { this.LayoutIfNeeded(); };
@@ -468,6 +492,7 @@ namespace TTG
             };
 
             // Final state
+            topMarginConstraint.Constant = TopMargin;
             bottomMarginConstraint.Constant = -BottomMargin;
             leftMarginConstraint.Constant = LeftMargin;
             rightMarginConstraint.Constant = -RightMargin;
@@ -484,5 +509,3 @@ namespace TTG
         }
     }
 }
-
-

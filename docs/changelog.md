@@ -1,5 +1,14 @@
 ﻿# CHANGELOG
 
+## 6.5.1
+* [fix][android] Cancel with tap on outside will now properly dismiss and call the Cancel action
+* [fix][android] ActionSheetAsync works with tap on outside cancelling
+
+## 6.5.0
+* [semi-breaking] NET Standard is here!
+* [feature] Toast position can now be set to the top on all platforms
+* [obsolete] methods ShowSuccess and ShowError are obsolete.  Use ShowImage and supply your own image
+
 ## 6.4.1
 * [fix][ios] NRE with toast image
 
